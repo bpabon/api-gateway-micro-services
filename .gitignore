@@ -5,6 +5,11 @@
 ### Linux ###
 *~
 
+# Servicio ignorados en los demás servicios 
+auth-services/postgres_data/
+auth-services/coverage/
+auth-services/logs/
+
 # temporary files which can be created if a process still has a handle open of a deleted file
 .fuse_hidden*
 
