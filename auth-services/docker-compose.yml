@@ -1,0 +1,47 @@
+version: "3.9"
+
+services:
+  postgres:
+    image: postgres:13
+    container_name: postgres_database
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network
+  postgrestest:
+    image: postgres:13
+    container_name: postgres_database_test
+    restart: always
+    environment:
+      - POSTGRES_DB=test
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=Password.123
+    ports:
+      - 5434:5432
+    networks:
+      - my_network
+  pgadmin:
+    depends_on:
+      - postgres
+    image: dpage/pgadmin4
+    container_name: pgadmin_micro_service
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=${PGADMIN_DEFAULT_EMAIL}
+      - PGADMIN_DEFAULT_PASSWORD=${PGADMIN_DEFAULT_PASSWORD}
+    ports:
+      - 5050:80
+    networks:
+      - my_network
+networks:
+  my_network:
+    driver: bridge
+volumes:
+  postgres_data:

@@ -1,0 +1,49 @@
+{
+  "name": "api-gateway-micro-services-chat",
+  "keywords": [
+    "api",
+    "gateway",
+    "microservicios",
+    "chat",
+    "mensajería",
+    "autenticación",
+    "node.js",
+    "express",
+    "scalable",
+    "real-time",
+    "app-base"
+  ],
+  "type": "module",
+  "version": "1.0.0",
+  "description": "API Gateway para gestionar microservicios en una aplicación de chat básico, proporcionando autenticación, gestión de usuarios y envío de mensajes en tiempo real. Este proyecto sirve como base para el desarrollo de aplicaciones de chat escalables y modulares.",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js",
+    "test": "jest --watchAll --coverage"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/bpabon/api_login_nodejs.git"
+  },
+  "author": "Branm Aldair Pabon Villamizar",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/bpabon/api_login_nodejs/issues"
+  },
+  "homepage": "https://github.com/bpabon/api_login_nodejs#readme",
+  "dependencies": {
+    "compression": "^1.7.5",
+    "cors": "^2.8.5",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "express-rate-limit": "^7.4.1",
+    "helmet": "^8.0.0",
+    "http-proxy-middleware": "^3.0.3",
+    "morgan": "^1.10.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.7"
+  }
+}

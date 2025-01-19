@@ -1,0 +1,11 @@
+{
+  "testEnvironment": "node",
+  "moduleFileExtensions": [ "js","json"],
+  "rootDir": ".",
+  "testMatch": ["**/test/**/*.test.js"],
+  "coverageDirectory": "coverage",
+  "transformIgnorePatterns": [
+    "/node_modules/"
+  ],
+  "transform": {}
+}
