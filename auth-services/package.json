@@ -1,15 +1,19 @@
 {
   "name": "auth-micro-service",
   "version": "1.0.0",
-  "description": "Microservicio de autenticación para un sistema de chat, proporcionando gestión segura de usuarios, generación de tokens JWT.",
+  "description": "Microservices de autenticación para un sistema de chat, proporcionando gestión segura de usuarios, generación de tokens JWT.",
   "keywords": [
     "api",
-    "gateway",
     "microservicios",
     "autenticación",
     "node.js",
     "express",
     "scalable",
+    "jest",
+    "jwt",
+    "email",
+    "gmail",
+    "docker",
     "app-base"
   ],
   "type": "module",
@@ -32,14 +36,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bpabon/api_login_nodejs.git"
+    "url": "git+https://github.com/bpabon/api-gateway-micro-services.git"
   },
   "author": "Branm Aldair Pabon Villamizar",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bpabon/api_login_nodejs/issues"
+    "url": "https://github.com/bpabon/api-gateway-micro-services/issues"
   },
-  "homepage": "https://github.com/bpabon/api_login_nodejs#readme",
+  "homepage": "https://github.com/bpabon/api-gateway-micro-services#readme",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "bcryptjs": "^2.4.3",

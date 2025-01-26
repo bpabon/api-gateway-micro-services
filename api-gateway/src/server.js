@@ -1,11 +1,12 @@
 import express from "express";
 import corsAdapter from "./middlewares/cors.js";
-import compressionPlugin from "./middlewares/compression.js"
+import compressionPlugin from "./middlewares/compression.js";
 import { config } from "./config/config.js";
 import setupRateLimitAdapter from "./middlewares/express-rate-limit.js";
-import setupMorganAdapter from "./middlewares/morgan.js"
-import setupHelmet from "./middlewares/helmet.js"
-import setupProxies from "./middlewares/proxy.js"
+import setupMorganAdapter from "./middlewares/morgan.js";
+import setupHelmet from "./middlewares/helmet.js";
+import setupProxies from "./middlewares/proxy.js";
+import http from "http";
 import { routeErrors, logErrors,errorHandler,ormErrorHandler,boomErrorHandler } from "./middlewares/error.js";
 
 export class Server {
@@ -14,6 +15,7 @@ export class Server {
         this.app = express();
         this.port = port; 
         this.routes = routes;
+        this.server = http.createServer(this.app); 
     }
     async start() {
         
@@ -31,7 +33,7 @@ export class Server {
         this.app.use(boomErrorHandler);
         this.app.use(errorHandler);
         // Escuchar el puerto
-        this.app.listen(this.port, () => {
+        this.server.listen(this.port, () => {
             if(config.isDev){
                 console.log(`App is running on ${this.port}`);
             }

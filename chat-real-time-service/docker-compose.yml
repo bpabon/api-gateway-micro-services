@@ -1,0 +1,34 @@
+version: "3.9"
+
+services:
+  postgreschat:
+    image: postgres:13
+    container_name: postgres_database_chat
+    restart: always
+    environment:
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres_data:/var/lib/postgresql/data
+    networks:
+      - my_network_chat
+  postgrestestchat:
+    image: postgres:13
+    container_name: postgres_database_chat_test
+    restart: always
+    environment:
+      - POSTGRES_DB=test
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=Password.123
+    ports:
+      - 5434:5432
+    networks:
+      - my_network_chat
+networks:
+  my_network_chat:
+    driver: bridge
+volumes:
+  postgres_data:

@@ -24,14 +24,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/bpabon/api_login_nodejs.git"
+    "url": "git+https://github.com/bpabon/api-gateway-micro-services.git"
   },
   "author": "Branm Aldair Pabon Villamizar",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/bpabon/api_login_nodejs/issues"
+    "url": "https://github.com/bpabon/api-gateway-micro-services/issues"
   },
-  "homepage": "https://github.com/bpabon/api_login_nodejs#readme",
+  "homepage": "https://github.com/bpabon/api-gateway-micro-services#readme",
   "dependencies": {
     "compression": "^1.7.5",
     "cors": "^2.8.5",

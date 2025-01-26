@@ -11,7 +11,7 @@ const __dirname = path.dirname(__filename);
 export const  routeErrors = (req, res, next) =>{
     const ipClient = req.ip || req.headers['x-forwarded-for'] || req.connection.remoteAddress;
     logger.warn(`Route not found ${ipClient??''}`);
-    const filePath = path.join(__dirname, `../../../public/security/404.html`);
+    const filePath = path.join(__dirname, `../../../public/segurity/404.html`);
     return res.status(404).sendFile(filePath);
 }
 export const logErrors = (err, req, res, next) => {

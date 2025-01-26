@@ -33,6 +33,7 @@ export const ROUTES = [
             pathRewrite: {
                 [`^/chat`]: '',
             },
+            ws:true // Habilitar WebSocket
         }
     }
 ]
