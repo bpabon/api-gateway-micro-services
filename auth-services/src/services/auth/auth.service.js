@@ -21,6 +21,7 @@ export class AuthService {
         if (!passwordCorrecta) {
             throw BoomAdapter.unauthorized('Contraseña incorrecta.');
         }
+        delete user.password;
         return user
     }
     // Verificar que las contraseñas sean las correctas

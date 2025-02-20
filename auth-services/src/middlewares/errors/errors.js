@@ -16,7 +16,6 @@ export const  routeErrors = (req, res, next) =>{
 }
 export const logErrors = (err, req, res, next) => {
     if (config.isDev) {
-        console.log(req);
         console.error(err);
     }
     next(err);

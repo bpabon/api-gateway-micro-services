@@ -11,11 +11,16 @@ export class UserService {
         return this.userRepository.find();
     }
 
-    async findOne(id) {
-        return this.userRepository.findOne({ where: { id } });
+    async findOne(id, selectFields = []) {
+        const select = selectFields && selectFields.length > 0 ? selectFields : undefined;
+        const user = await this.userRepository.findOne({select, where: { id } });
+        delete user.password;
+        return user
     }
-    async findByEmail(email){
-        return this.userRepository.findOne({ where: { email } });
+    async findByEmail(email,selectFields = []){
+        const select = selectFields && selectFields.length > 0 ? selectFields : undefined;
+        const user =  await this.userRepository.findOne({ select, where: { email } });
+        return user
     }
 
     async create(user) {

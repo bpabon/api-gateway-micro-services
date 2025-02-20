@@ -8,7 +8,7 @@ import { config } from "./config/config.js";
 import helmetAdapter from "./plugins/helmet.adapter.js"
 import logger from "./plugins/winston.adapter.js";
 import { routeErrors, logErrors, errorHandler, ormErrorHandler, boomErrorHandler } from "./middlewares/errors/errors.js";
-// import { AppDataSource } from './db/postgresql/ormconfig.js'
+import { AppDataSource } from './db/postgresql/ormconfig.js'
 
 
 export class Server {
@@ -51,21 +51,21 @@ export class Server {
     app.use(errorHandler);
   }
 
-  //   async connectionOrm() {
-  //     try {
-  //       await AppDataSource.initialize()
-  //         .then(() => {
-  //           if (config.isDev) {
-  //             logger.info(`Conexión exitosa a la base de datos!`);
-  //           }
-  //         }).catch(err => {
-  //           logger.error(`Error connecting to the database ${err.message}`);
-  //           process.exit(1);
-  //         });
-  //     } catch (error) {
-  //       throw new Error(error.message);
-  //     }
-  //   }
+  async connectionOrm() {
+    try {
+      await AppDataSource.initialize()
+        .then(() => {
+          if (config.isDev) {
+            logger.info(`Conexión exitosa a la base de datos!`);
+          }
+        }).catch(err => {
+          logger.error(`Error connecting to the database ${err.message}`);
+          process.exit(1);
+        });
+    } catch (error) {
+      throw new Error(error.message);
+    }
+  }
   async close() {
     this.server?.close();
   }
@@ -73,7 +73,7 @@ export class Server {
     const app = express();
     await this.middlewares(app);
     await this.routesProject(app);
-    // await this.connectionOrm();
+    await this.connectionOrm();
     await this.errors(app);
     return app;
   }

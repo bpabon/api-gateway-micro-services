@@ -25,6 +25,9 @@ export default new EntitySchema({
       length: 250, 
       nullable: true, 
     },
+    connection:{
+      type: "boolean",
+    },
     created_at: {
       type: "timestamp",
       default: () => 'CURRENT_TIMESTAMP',

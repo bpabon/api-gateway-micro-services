@@ -2,7 +2,7 @@ import { WebSocketServer } from 'ws';
 import { JwtService } from '../jwt/jwt.service.js';
 import logger from "../../plugins/winston.adapter.js";
 import { ChatWebsockets } from '../../domain/dto/ws.chat.dto.js';
-
+import { AuthService } from '../auth/auth.service.js';
 export class WssService {
     static _instance;
     constructor(options) {
@@ -28,9 +28,11 @@ export class WssService {
                 return;
             }
             const userEmail = token.email;
+            // Enviar un mensaje al cliente después de la conexión
+            await this.updateConnection(tokenSend, true, ws);
             this.clients[userEmail] = ws;
 
-            ws.on('message', (message) => {
+            ws.on('message', async(message) => {
                 const [error, objectDto] = ChatWebsockets.joinRoomDto(JSON.parse(message));
                 if(error) {
                     logger.warn(error);
@@ -43,55 +45,68 @@ export class WssService {
                     ws.close(1000, 'Type is not exist in list of white types');
                     return;
                 }
-                console.log(objectDto);
                 // Unir al usuario a una sala
                 if (type === 'join') {
-                    if (!this.rooms[roomId]) {
-                        this.rooms[roomId] = [];
-                    }
-                    this.rooms[roomId].push(userEmail);
-                    ws.send(JSON.stringify({ message: `User connected on rooms ${roomId}` }));
-                    console.log(`User with token ${userEmail} joined room ${roomId}`);
+                    await this.handleJoinRoom(userEmail, roomId, ws);
                 } else if (type === 'message' && this.rooms[roomId]) {
-                    const [errorMessage, messageDto] = ChatWebsockets.messageRoomDto(objectDto);
-                    if(errorMessage) {
-                        logger.warn(errorMessage);
-                        ws.close(1000, errorMessage);
-                        return;
-                    }
-                    const { content } = messageDto;
-                    // Enviar mensaje a todos los usuarios en la sala
-                    this.rooms[roomId].forEach((id) => {
-                        // !== userEmail Agregar para Enviar mensajes a todos menos al usuario que envió el mensaje
-                        if (this.clients[id]) {
-                            this.clients[id].send(JSON.stringify({ user: userEmail, content }));
-                        }
-                    });
+                    await this.handleMessage(userEmail, roomId, objectDto, ws);
                 }
             });
 
-            ws.on('close', () => {
-                console.log('disconnected');
-                // Eliminar al usuario del registro cuando se desconecte
-                if (this.clients[userEmail] === ws) {
-                    delete this.clients[userEmail];
-                    // Eliminar al usuario de todas las salas
-                    for (const roomId in this.rooms) {
-                        this.rooms[roomId] = this.rooms[roomId].filter(id => id !== userEmail);
-                    }
-                }
+            ws.on('close', async () => {
+                 await this.updateConnection(tokenSend, false, ws);
+                this.handleDisconnect(userEmail, ws);
             });
             // Manejo de errores
             ws.on('error', (err) => {
                 logger.error(`Error en la conexión WebSocket: ${err.message ?? ''}`);
                 ws.close(1000, 'Error en la conexión WebSocket');
             });
-            // Enviar un mensaje al cliente después de la conexión
-            ws.send('Bienvenido al servidor WebSocket');
+
         });
     }
     static initWss(options) {
         WssService._instance = new WssService(options);
+    }
+    async handleJoinRoom(userEmail, roomId, ws) {
+        if (!this.rooms[roomId]) {
+            this.rooms[roomId] = [];
+        }
+        this.rooms[roomId].push(userEmail);
+        // await DatabaseService.saveUserJoinRoom(userEmail, roomId);
+        ws.send(JSON.stringify({ message: `User connected on rooms ${roomId}` }));
+        console.log(`User with token ${userEmail} joined room ${roomId}`);
+    }
+    async handleMessage(userEmail, roomId, objectDto, ws) {
+        const [errorMessage, messageDto] = ChatWebsockets.messageRoomDto(objectDto);
+        if (errorMessage) {
+            logger.warn(errorMessage);
+            ws.close(1000, errorMessage);
+            return;
+        }
+        const { content } = messageDto;
+        // await DatabaseService.saveMessage(userEmail, roomId, content);
+        this.rooms[roomId].forEach((id) => {
+            console.log(id,'+++++++++++++++++++', roomId);
+            if (this.clients[id]) {
+                this.clients[id].send(JSON.stringify({ user: userEmail, content }));
+            }
+        });
+    }
+    async updateConnection(token, connection, ws){
+        const update = await AuthService.updateStatusConnection(token,connection);
+        if(update){
+            ws.send(connection ? 'Bienvenido al servidor WebSocket' : 'User disconnected');
+        }
+    }
+    handleDisconnect(userEmail, ws) {
+        console.log('disconnected');
+        if (this.clients[userEmail] === ws) {
+            delete this.clients[userEmail];
+            for (const roomId in this.rooms) {
+                this.rooms[roomId] = this.rooms[roomId].filter(id => id !== userEmail);
+            }
+        }
     }
 }
 /*
@@ -102,7 +117,7 @@ export class WssService {
 }
 2. Enviar mensaje a una sala 
 {
-    "type": "join",
+    "type": "message",
     "content": "Hola a todos!",
     "roomId": "room1"
 }
