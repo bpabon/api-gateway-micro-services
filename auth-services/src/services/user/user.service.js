@@ -28,6 +28,7 @@ export class UserService {
         const hash = await auth.encryptPassword(user.password);
         const createUser = this.userRepository.create({
             ...user,
+            connection: false,
             password: hash
         });
         const newUser = await this.userRepository.save(createUser);
