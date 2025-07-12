@@ -43,7 +43,6 @@ export class Server {
   // Routes project
   async routesProject() {
     this.app.use(this.routes);
-    // // Error of routes
     this.app.use(routeErrors);
   }
   // Error middleware

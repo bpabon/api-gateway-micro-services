@@ -6,6 +6,7 @@ export class JwtRoutes {
     const router = Router();
     const jwtController = new JwtController();
     router.get('/validate', jwtController.ValidateJwt);
+    router.get('/validate', jwtController.ValidateJwtChangePassword);
     return router;
   }
 }

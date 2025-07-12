@@ -36,7 +36,7 @@ export class AuthService {
         }
         return await this.signToken.generateToken( payload, '6h');
     }
-    // Verifique jwt 
+    // Verifique jwt
     async verifyJwt(token){
         return await this.signToken.validateToken(token);
     }
