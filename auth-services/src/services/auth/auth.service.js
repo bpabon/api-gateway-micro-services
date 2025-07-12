@@ -67,7 +67,7 @@ export class AuthService {
             throw BoomAdapter.unauthorized('El correo suministrado no existe.');
         }
         const token = await this.generateToken(user, '1h');
-        const url = `${config.urlPublic}/public/updatePasswordUrl/${token}`;
+        const url = `${config.urlPublic}/auth/change-password/${token}`;
         await this.userService.update(user.id, {recovery_token: token});
         const senMail = await this.emailService.sendEmail(user.email, 'Restablecimiento de Contraseña', {name: user.email, link: url}, 'RECOVERY_PASSWORD','v1');
         return senMail;

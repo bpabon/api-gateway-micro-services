@@ -11,9 +11,9 @@ export class JwtController {
         const result = await this.authService.verifyJwt(token);
         return res.status(200).json({token: result});
     });
-    ValidateJwtChangePassword = catchAsync(async (req, res, next) =>{
-        const token = req.headers['x-token']??'';
+    ValidateJwtParams = catchAsync(async (req, res, next) =>{
+        const { token } = req.params;
         const result = await this.authService.verifyJwt(token);
-        return res.status(200).json({token: result});
+        return res.status(200).json({token: result ? true : false});
     });
 }
