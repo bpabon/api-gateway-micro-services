@@ -4,7 +4,7 @@ Este repositorio contiene el backend de la aplicación API Microservices, una ar
 
 El proyecto ofrece funcionalidades clave como autenticación de usuarios, comunicación en tiempo real y una infraestructura preparada para escalar. Además, cuenta con una interfaz front-end disponible en el siguiente repositorio:
 
-- 🔗 Frontend del proyecto: [front-end-micro-services](https://github.com/bpabon/chats-micro-services)
+- 🔗 Frontend del proyecto: [front-end-micro-services](https://github.com/bpabon/front-end-micro-services)
 
 - 🧩 Arquitectura de Servicios
 
@@ -79,8 +79,8 @@ Yarn o npm
 
 ###  🚀 Clonación del proyecto
   ```bash
-git clone https://github.com/bpabon/chats-micro-services-backend.git
-cd chats-micro-services-backend
+git clone https://github.com/bpabon/front-end-micro-services.git
+cd front-end-micro-services
   ```
 
 ### 🗃️ Estructura del proyecto
