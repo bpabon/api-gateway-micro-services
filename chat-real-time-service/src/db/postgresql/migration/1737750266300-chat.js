@@ -5,7 +5,7 @@ export class Rooms1737750266300 {
         CREATE TYPE typeConversation AS ENUM ('PRIVADA', 'GRUPO');
         CREATE TABLE conversation (
             id SERIAL PRIMARY KEY,
-            type typeConversation NOT NULL,
+            type typeConversation NOT NULL DEFAULT 'PRIVADA',
             created_at TIMESTAMPTZ NOT NULL DEFAULT CURRENT_TIMESTAMP 
         );
         COMMENT ON TABLE conversation IS 'Tabla de conversaciones';

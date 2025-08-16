@@ -3,6 +3,7 @@ import { JwtService } from '../jwt/jwt.service.js';
 import logger from "../../plugins/winston.adapter.js";
 import { ChatWebsockets } from '../../domain/dto/ws.chat.dto.js';
 import { AuthService } from '../auth/auth.service.js';
+import url from 'url';
 export class WssService {
     static _instance;
     constructor(options) {
@@ -13,10 +14,11 @@ export class WssService {
         this.start();
     }
     start() {
-        const listWhiteTypes = ['join','message'];
+        const listWhiteTypes = ['join', 'message'];
         this.wss.on('connection', async (ws, req) => {
-            const tokenSend = req.headers['x-token'];
-            if (!tokenSend) {
+            const parsedUrl = url.parse(req?.url, true);
+            const tokenSend = parsedUrl.query['x-token'];
+            if (!tokenSend || typeof tokenSend !== 'string') {
                 logger.warn(`Token not found`);
                 ws.close(1000, 'Token not found');
                 return;
@@ -31,16 +33,16 @@ export class WssService {
             // Enviar un mensaje al cliente después de la conexión
             await this.updateConnection(tokenSend, true, ws);
             this.clients[userEmail] = ws;
-
-            ws.on('message', async(message) => {
+            console.log('Usuario conectado')
+            ws.on('message', async (message) => {
                 const [error, objectDto] = ChatWebsockets.joinRoomDto(JSON.parse(message));
-                if(error) {
+                if (error) {
                     logger.warn(error);
                     ws.close(1000, error);
                     return;
                 }
                 const { type, roomId } = objectDto;
-                if(!listWhiteTypes.includes(type)){
+                if (!listWhiteTypes.includes(type)) {
                     logger.warn(`Type is not exist in list of white types`);
                     ws.close(1000, 'Type is not exist in list of white types');
                     return;
@@ -54,7 +56,7 @@ export class WssService {
             });
 
             ws.on('close', async () => {
-                 await this.updateConnection(tokenSend, false, ws);
+                await this.updateConnection(tokenSend, false, ws);
                 this.handleDisconnect(userEmail, ws);
             });
             // Manejo de errores
@@ -86,17 +88,26 @@ export class WssService {
         }
         const { content } = messageDto;
         // await DatabaseService.saveMessage(userEmail, roomId, content);
+        // this.rooms[roomId].forEach((id) => {
+        //     if (this.clients[id]) {
+        //         this.clients[id].send(JSON.stringify({ user: userEmail, content }));
+        //     }
+        // });
+        // Enviar mensaje menos al usuario que lo envio
         this.rooms[roomId].forEach((id) => {
-            console.log(id,'+++++++++++++++++++', roomId);
-            if (this.clients[id]) {
-                this.clients[id].send(JSON.stringify({ user: userEmail, content }));
+            if (id !== userEmail && this.clients[id]) {
+                this.clients[id].send(JSON.stringify({
+                    sender: userEmail,   
+                    content,
+                    type: "message"     
+                }));
             }
         });
     }
-    async updateConnection(token, connection, ws){
-        const update = await AuthService.updateStatusConnection(token,connection);
-        if(update){
-            ws.send(connection ? 'Bienvenido al servidor WebSocket' : 'User disconnected');
+    async updateConnection(token, connection, ws) {
+        const update = await AuthService.updateStatusConnection(token, connection);
+        if (update) {
+            ws.send(JSON.stringify({ message: connection ? 'Bienvenido al servidor WebSocket' : 'User disconnected', type: connection ? "connection-ack" : "disconect-ack", }));
         }
     }
     handleDisconnect(userEmail, ws) {

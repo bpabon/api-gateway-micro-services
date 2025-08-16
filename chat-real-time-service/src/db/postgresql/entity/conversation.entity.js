@@ -12,9 +12,9 @@ export default new EntitySchema({
             unique: true
         },
         type: {
-            type: "varchar",
-            length: 7,
-            nullable: false,
+            type: "enum",
+            enum: ['PRIVADA', 'GRUPO'],  // Definir los valores del ENUM
+            nullable: false,  // Aseguramos que no sea NULL
         },
         created_at: {
             type: "timestamp",
