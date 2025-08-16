@@ -79,8 +79,8 @@ Yarn o npm
 
 ###  🚀 Clonación del proyecto
   ```bash
-git clone https://github.com/bpabon/front-end-micro-services.git
-cd front-end-micro-services
+git clone https://github.com/bpabon/api-gateway-micro-services
+cd api-gateway-micro-services
   ```
 
 ### 🗃️ Estructura del proyecto
